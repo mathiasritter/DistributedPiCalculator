@@ -38,6 +38,9 @@
       <property name="caretWidth" class="java.lang.Integer" />
     </properties>
   </component>
+  <component name="EntryPointsManager">
+    <entry_points version="2.0" />
+  </component>
   <component name="IdProvider" IDEtalkID="173FDFE9D0847DA09DC7980013C06823" />
   <component name="MavenProjectsManager">
     <option name="originalFiles">
