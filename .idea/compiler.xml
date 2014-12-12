@@ -25,5 +25,8 @@
         <module name="dezsys07" />
       </profile>
     </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="dezsys07" target="1.8" />
+    </bytecodeTargetLevel>
   </component>
 </project>
