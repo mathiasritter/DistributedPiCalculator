@@ -10,13 +10,14 @@ public class CalculatorServer extends UnicastRemoteObject implements Calculator 
 
 
 	protected CalculatorServer() throws RemoteException {
+
 	}
 
 	/**
-	 * @see Calculator#pi(int)
+	 * @see at.geyerritter.dezsys07.Calculator#pi(int)
 	 */
-	public BigDecimal pi(int anzahl_nachkommastellen) {
-		return null;
+	public BigDecimal pi(int anzahl_nachkommastellen) throws RemoteException {
+
 	}
 
 
