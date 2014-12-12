@@ -12,8 +12,10 @@ public class ClientStarter {
     public static void main(String[] args) {
         InputOutput io = new ConsoleIO();
         NetworkController nc = new CalculatorController(io);
+        Thread client = new Thread(new CalculatorClient(io, nc));
+        client.start();
         try {
-            nc.connect("rmi://127.0.0.1/Calculator");
+            nc.connect("rmi://127.0.0.1:25638/Calculator");
         } catch (RemoteException e) {
             e.printStackTrace();
         } catch (NotBoundException e) {

@@ -6,7 +6,7 @@ import java.rmi.RemoteException;
 
 public interface NetworkController {
 
-	public abstract void request(int parameter);
+	public abstract void request(int parameter) throws RemoteException;
 
 	public abstract void setIO(InputOutput io);
 

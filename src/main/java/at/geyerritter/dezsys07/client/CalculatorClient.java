@@ -1,5 +1,7 @@
 package at.geyerritter.dezsys07.client;
 
+import java.rmi.RemoteException;
+
 public class CalculatorClient implements Runnable {
 
     private InputOutput io;
@@ -15,9 +17,11 @@ public class CalculatorClient implements Runnable {
         while(true) {
             try {
                 int parameter = Integer.parseInt(io.readContent());
-                nc.Request(parameter);
+                nc.request(parameter);
             } catch (NumberFormatException e) {
                 System.out.println("Geben Sie eine Zahl ein, um die Abfrage zu starten");
+            } catch (RemoteException e) {
+                e.printStackTrace();
             }
 
         }

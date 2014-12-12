@@ -24,7 +24,7 @@ public class CalculatorController implements NetworkController {
 	 * 
 	 *  
 	 */
-	public void request(int parameter) {
+	public void request(int parameter) throws RemoteException {
 		io.displayContent(stub.pi(parameter).toString());
 	}
 
