@@ -17,7 +17,16 @@ public class CalculatorServer extends UnicastRemoteObject implements Calculator 
     private BigDecimal four;
 
     protected CalculatorServer(int port) throws RemoteException {
+
+        if ( System.getSecurityManager() == null ) {
+            System.setProperty("java.security.policy", System.class.getResource("/java.policy").toString());
+            System.setSecurityManager( new SecurityManager() );
+        }
+
 		Registry registry = LocateRegistry.createRegistry(port);
+        //UnicastRemoteObject.exportObject(this, port);
+        registry.rebind("Calculator", this);
+
 
         this.two = new BigDecimal(2);
         this.four = new BigDecimal(4);
@@ -27,6 +36,12 @@ public class CalculatorServer extends UnicastRemoteObject implements Calculator 
      * @see at.geyerritter.dezsys07.Calculator#pi(int)
      */
     public BigDecimal pi(int anzahl_nachkommastellen) throws RemoteException {
+
+        if (anzahl_nachkommastellen > 997) {
+            anzahl_nachkommastellen = 997;
+        }
+
+
         BigDecimal a = ONE;
         BigDecimal b = ONE.divide(sqrt(two, anzahl_nachkommastellen), anzahl_nachkommastellen, ROUND_HALF_UP);
         BigDecimal t = new BigDecimal(0.25);

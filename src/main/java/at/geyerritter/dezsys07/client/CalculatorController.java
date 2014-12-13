@@ -47,6 +47,7 @@ public class CalculatorController implements NetworkController {
 	public void connect(String url) throws RemoteException, NotBoundException, MalformedURLException {
 
 		if ( System.getSecurityManager() == null ) {
+			System.setProperty("java.security.policy", System.class.getResource("/java.policy").toString());
 			System.setSecurityManager( new SecurityManager() );
 		}
 
