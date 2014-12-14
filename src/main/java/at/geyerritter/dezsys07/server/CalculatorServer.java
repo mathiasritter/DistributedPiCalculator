@@ -3,6 +3,9 @@ package at.geyerritter.dezsys07.server;
 import at.geyerritter.dezsys07.Calculator;
 
 import java.math.BigDecimal;
+import java.net.MalformedURLException;
+import java.rmi.Naming;
+import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
@@ -11,21 +14,25 @@ import java.rmi.server.UnicastRemoteObject;
 import static java.math.BigDecimal.ONE;
 import static java.math.BigDecimal.ROUND_HALF_UP;
 
-public class CalculatorServer extends UnicastRemoteObject implements Calculator {
+public class CalculatorServer extends UnicastRemoteObject implements Calculator, Server {
 
     private BigDecimal two;
     private BigDecimal four;
+    private Balancer balancer;
+    private Registry registry;
+    private int id;
 
-    protected CalculatorServer(int port) throws RemoteException {
+    protected CalculatorServer(String balancerip, int registryport, int serverport) throws RemoteException, MalformedURLException, NotBoundException {
 
         if ( System.getSecurityManager() == null ) {
             System.setProperty("java.security.policy", System.class.getResource("/java.policy").toString());
             System.setSecurityManager( new SecurityManager() );
         }
 
-		Registry registry = LocateRegistry.createRegistry(port);
-        //UnicastRemoteObject.exportObject(this, port);
-        registry.rebind("Calculator", this);
+        UnicastRemoteObject.exportObject(this, serverport);
+
+		this.registry = LocateRegistry.getRegistry(registryport);
+        this.balancer = (Balancer) Naming.lookup("rmi://" + balancerip + ":" + registryport + "/Balancer");
 
 
         this.two = new BigDecimal(2);
@@ -73,12 +80,25 @@ public class CalculatorServer extends UnicastRemoteObject implements Calculator 
         return x1;
     }
 
-    public static void main(String[] args) {
+    @Override
+    public void unregisterAtRegistry() throws RemoteException, NotBoundException {
+        registry.unbind("Calculator" + id);
+    }
+
+    @Override
+    public void registerAtRegistry() throws RemoteException {
+        id = balancer.getNextId();
+        registry.rebind("Calculator" + id, this);
+    }
+
+    @Override
+    public void run() {
         try {
-            System.out.println(new CalculatorServer(123).pi(20));
+            this.unregisterAtRegistry();
         } catch (RemoteException e) {
+            e.printStackTrace();
+        } catch (NotBoundException e) {
             e.printStackTrace();
         }
     }
-
 }
