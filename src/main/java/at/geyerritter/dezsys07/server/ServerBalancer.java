@@ -67,7 +67,7 @@ public class ServerBalancer extends UnicastRemoteObject implements Balancer, Cal
                 return null;
             } else {
                 try {
-                    Calculator c = (Calculator) Naming.lookup("Calculator" + this.tmp);
+                    Calculator c = (Calculator) Naming.lookup(elements.get(this.tmp));
                     return c.pi(anzahl_nachkommastellen);
                 } catch (NotBoundException e) {
                     e.printStackTrace();
@@ -75,6 +75,16 @@ public class ServerBalancer extends UnicastRemoteObject implements Balancer, Cal
                     e.printStackTrace();
                 }
             }
+        } else {
+            Calculator c = null;
+            try {
+                c = (Calculator) Naming.lookup(elements.get(this.tmp));
+            } catch (NotBoundException e) {
+                e.printStackTrace();
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+            }
+            return c.pi(anzahl_nachkommastellen);
         }
 
         return null;
