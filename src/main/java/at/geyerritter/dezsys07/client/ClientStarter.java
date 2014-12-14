@@ -15,7 +15,7 @@ public class ClientStarter {
         Thread client = new Thread(new CalculatorClient(io, nc));
         client.start();
         try {
-            nc.connect("rmi://127.0.0.1:25638/Calculator");
+            nc.connect("rmi://127.0.0.1:25637/Balancer");
         } catch (RemoteException e) {
             e.printStackTrace();
         } catch (NotBoundException e) {

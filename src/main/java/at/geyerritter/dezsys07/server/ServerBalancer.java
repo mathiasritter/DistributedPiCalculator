@@ -10,13 +10,14 @@ import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
+import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by Stefan on 14.12.2014.
  */
-public class ServerBalancer implements Balancer, Calculator {
+public class ServerBalancer extends UnicastRemoteObject implements Balancer, Calculator  {
 
     private int tmp;
     private int port;
@@ -38,18 +39,17 @@ public class ServerBalancer implements Balancer, Calculator {
         registry.rebind("Balancer", this);
     }
 
-    public int getNextId() {
+    public int getNextId() throws RemoteException {
         this.nextId++;
         return this.nextId;
     }
 
     public BigDecimal pi(int anzahl_nachkommastellen) throws RemoteException {
-        BigDecimal pi = null;
 
         List<String> elements = new ArrayList<String>();
 
         try {
-            String[] entries = Naming.list("rmi://127.0.0.1:25638");
+            String[] entries = Naming.list("rmi://127.0.0.1:" + port);
 
             for (String s : entries)
                 if (s.contains("Calculator"))
@@ -58,13 +58,16 @@ public class ServerBalancer implements Balancer, Calculator {
             e.printStackTrace();
         }
 
+        System.out.println("Size of elements " + elements.size());
+
         if (this.tmp + 1 > elements.size()) {
             this.tmp = 0;
             if (this.tmp + 1 > elements.size()) {
+                System.out.println("Null returned, weil" + tmp++ + " > " + elements.size());
                 return null;
             } else {
                 try {
-                    Calculator c = (Calculator) Naming.lookup("Caclultor" + this.tmp);
+                    Calculator c = (Calculator) Naming.lookup("Calculator" + this.tmp);
                     return c.pi(anzahl_nachkommastellen);
                 } catch (NotBoundException e) {
                     e.printStackTrace();

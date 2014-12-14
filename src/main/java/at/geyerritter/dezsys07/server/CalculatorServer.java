@@ -30,7 +30,7 @@ public class CalculatorServer extends UnicastRemoteObject implements Calculator,
             System.setSecurityManager( new SecurityManager() );
         }
 
-        UnicastRemoteObject.exportObject(this, serverport);
+        //UnicastRemoteObject.exportObject(this, serverport);
 
 		this.registry = LocateRegistry.getRegistry(registryport);
         this.balancer = (Balancer) Naming.lookup("rmi://" + balancerip + ":" + registryport + "/Balancer");
