@@ -23,6 +23,12 @@ public class ServerBalancer implements Balancer, Calculator {
     private int nextId;
 
     public ServerBalancer(int port) throws RemoteException {
+
+        if ( System.getSecurityManager() == null ) {
+            System.setProperty("java.security.policy", System.class.getResource("/java.policy").toString());
+            System.setSecurityManager( new SecurityManager() );
+        }
+
         this.port = port;
         createRegistry();
     }

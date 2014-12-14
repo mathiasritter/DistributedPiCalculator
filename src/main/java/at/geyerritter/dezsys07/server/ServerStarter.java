@@ -11,7 +11,7 @@ public class ServerStarter {
 
     public static void main(String[] args) {
         try {
-            Server s = new CalculatorServer("127.0.0.1", 25638, 25638);
+            Server s = new CalculatorServer("127.0.0.1", 25637, 25638);
             s.registerAtRegistry();
             Thread t = new Thread(s);
             Runtime.getRuntime().addShutdownHook(t);
