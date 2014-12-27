@@ -15,7 +15,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by Stefan on 14.12.2014.
+ * Der Balancer vermittelt Anfragen der Clients an Server weiter.
+ * Die Server werden nach der Reihe durchgegangen, es kann jederzeit ein Server sich an-
+ * und wieder abmelden.
+ *
+ * @author sgeyer
+ * @author mritter
+ *
+ * @version 1.0
  */
 public class CalculatorBalancer extends UnicastRemoteObject implements Balancer, Calculator  {
 
@@ -23,6 +30,13 @@ public class CalculatorBalancer extends UnicastRemoteObject implements Balancer,
     private int port;
     private int nextId;
 
+    /**
+     * An dem angegebenen Port wird ein neuer Balancer initialisiert.
+     * Das heisst, es wird eine neue RMI-Registry erstellt.
+     *
+     * @param port Balancer-Port
+     * @throws RemoteException Fehler beim Erstellen der Registry
+     */
     public CalculatorBalancer(int port) throws RemoteException {
 
         if ( System.getSecurityManager() == null ) {
@@ -31,22 +45,25 @@ public class CalculatorBalancer extends UnicastRemoteObject implements Balancer,
         }
 
         this.port = port;
-        createRegistry();
-    }
 
-    private void createRegistry() throws RemoteException {
         Registry registry = LocateRegistry.createRegistry(port);
         registry.rebind("Balancer", this);
     }
 
+    /**
+     * @see at.geyerritter.dezsys07.Balancer#getNextId()
+     */
     public int getNextId() throws RemoteException {
         this.nextId++;
         return this.nextId;
     }
 
+    /**
+     * @see at.geyerritter.dezsys07.Calculator#pi(int)
+     */
     public BigDecimal pi(int anzahl_nachkommastellen) throws RemoteException {
 
-        List<String> elements = new ArrayList<String>();
+        List<String> elements = new ArrayList<>();
 
         try {
             String[] entries = Naming.list("rmi://127.0.0.1:" + port);

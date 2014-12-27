@@ -5,7 +5,6 @@ import at.geyerritter.dezsys07.Calculator;
 import java.net.MalformedURLException;
 import java.rmi.Naming;
 import java.rmi.NotBoundException;
-import java.rmi.RMISecurityManager;
 import java.rmi.RemoteException;
 
 public class CalculatorController implements NetworkController {
@@ -42,16 +41,18 @@ public class CalculatorController implements NetworkController {
 
 
 	/**
-	 * @see NetworkController#connect(String)
+	 * @see NetworkController#connect(String, int)
 	 * 
 	 *  
 	 */
-	public void connect(String url) throws RemoteException, NotBoundException, MalformedURLException {
+	public void connect(String toIp, int toPort) throws RemoteException, NotBoundException, MalformedURLException {
 
 		if ( System.getSecurityManager() == null ) {
 			System.setProperty("java.security.policy", System.class.getResource("/java.policy").toString());
 			System.setSecurityManager( new SecurityManager() );
 		}
+
+		String url = "rmi://" + toIp + ":" + toPort + "/Balancer";
 
 		this.stub = (Calculator) Naming.lookup(url);
 

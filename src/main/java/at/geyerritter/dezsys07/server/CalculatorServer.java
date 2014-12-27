@@ -23,7 +23,7 @@ public class CalculatorServer extends UnicastRemoteObject implements Calculator,
     private Registry registry;
     private int id;
 
-    protected CalculatorServer(String balancerip, int registryport, int serverport) throws RemoteException, MalformedURLException, NotBoundException {
+    public CalculatorServer(String balancerip, int registryport, int serverport) throws RemoteException, MalformedURLException, NotBoundException {
 
         if ( System.getSecurityManager() == null ) {
             System.setProperty("java.security.policy", System.class.getResource("/java.policy").toString());
