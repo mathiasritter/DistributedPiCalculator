@@ -123,10 +123,8 @@ public class CalculatorServer extends UnicastRemoteObject implements Server, Run
     public void run() {
         try {
             this.unregisterAtRegistry();
-        } catch (RemoteException e) {
-            e.printStackTrace();
-        } catch (NotBoundException e) {
-            e.printStackTrace();
+        } catch (RemoteException | NotBoundException e) {
+            logger.info("Balancer wurde bereits beendet, deshalb konnte sich der Server nicht abmelden");
         }
     }
 }

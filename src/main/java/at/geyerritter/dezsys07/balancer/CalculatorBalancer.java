@@ -80,10 +80,6 @@ public class CalculatorBalancer extends UnicastRemoteObject implements Balancer,
             e.printStackTrace();
         }
 
-        logger.info("Elements-Size:" + elements.size());
-        logger.info("Temp: " + tmp);
-        logger.info("Elements to String" + elements.toString());
-
         if (elements.size() > 0) {
             if (this.tmp >= elements.size())
                 this.tmp = 0;
