@@ -1,4 +1,4 @@
-package at.geyerritter.dezsys07.server;
+package at.geyerritter.dezsys07.balancer;
 
 import java.rmi.RemoteException;
 
@@ -8,7 +8,7 @@ import java.rmi.RemoteException;
 public class BalancerStarter {
     public static void main(String[] args) {
         try {
-            new ServerBalancer(25637);
+            new CalculatorBalancer(25637);
         } catch (RemoteException e) {
             e.printStackTrace();
         }

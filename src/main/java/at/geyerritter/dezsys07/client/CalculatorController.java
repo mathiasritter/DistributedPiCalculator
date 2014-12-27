@@ -25,13 +25,9 @@ public class CalculatorController implements NetworkController {
 	 *  
 	 */
 	public void request(int parameter) throws RemoteException {
-		if (io == null)
-			System.out.println("IO is null!!");
-
-		if (stub == null)
-			System.out.println("Stub is null!!");
 
 		io.displayContent(stub.pi(parameter).toString());
+
 	}
 
 
