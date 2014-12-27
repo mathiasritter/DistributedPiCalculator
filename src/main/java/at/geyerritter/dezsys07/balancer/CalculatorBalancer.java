@@ -2,6 +2,8 @@ package at.geyerritter.dezsys07.balancer;
 
 import at.geyerritter.dezsys07.Balancer;
 import at.geyerritter.dezsys07.Calculator;
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 
 import java.math.BigDecimal;
 import java.net.MalformedURLException;
@@ -28,6 +30,9 @@ public class CalculatorBalancer extends UnicastRemoteObject implements Balancer,
     private int tmp;
     private int port;
     private int nextId;
+
+    private static final Logger logger = LogManager.getLogger("CalculatorBalancer");
+
 
     /**
      * An dem angegebenen Port wird ein neuer Balancer initialisiert.
@@ -74,16 +79,16 @@ public class CalculatorBalancer extends UnicastRemoteObject implements Balancer,
             e.printStackTrace();
         }
 
-        System.out.println("Size of elements " + elements.size());
 
         if (this.tmp + 1 > elements.size()) {
             this.tmp = 0;
             if (this.tmp + 1 > elements.size()) {
-                System.out.println("Null returned, weil" + tmp++ + " > " + elements.size());
+                logger.error("Keine Server zur Beantwortung der Anfrage verfuegbar");
                 return null;
             } else {
                 try {
                     Calculator c = (Calculator) Naming.lookup(elements.get(this.tmp));
+                    logger.info("Anfrage eines Clients weitergeleitet an Server " + elements.get(this.tmp));
                     return c.pi(anzahl_nachkommastellen);
                 } catch (NotBoundException e) {
                     e.printStackTrace();

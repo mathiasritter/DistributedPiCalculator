@@ -34,7 +34,7 @@ public interface NetworkController {
 	 */
 	public abstract void setIO(InputOutput io);
 
-	public abstract InputOutput getIO();
+	public InputOutput getIO();
 
 	/**
 	 * Verbindungsaufbau mittels RMI zu einem entfernten Host.

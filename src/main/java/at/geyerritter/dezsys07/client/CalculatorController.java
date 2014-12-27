@@ -39,7 +39,12 @@ public class CalculatorController implements NetworkController {
 	 */
 	public void request(int parameter) throws RemoteException {
 
-		io.displayContent(stub.pi(parameter).toString());
+		String pi = stub.pi(parameter).toString();
+
+		if (pi == null)
+			logger.error("Anfrage nicht beantwortet werden, da derzeit kein Server verfuegbar ist.");
+		else
+			io.displayContent(pi);
 
 	}
 
