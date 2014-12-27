@@ -70,6 +70,7 @@ public class CalculatorBalancer extends UnicastRemoteObject implements Balancer,
         List<String> elements = new ArrayList<>();
 
         try {
+            // IP ist hardcoded weil wir die Registry im Konstruktor lokal initialisieren.
             String[] entries = Naming.list("rmi://127.0.0.1:" + port);
 
             for (String s : entries)
@@ -79,25 +80,12 @@ public class CalculatorBalancer extends UnicastRemoteObject implements Balancer,
             e.printStackTrace();
         }
 
+        if (elements.size() > 0) {
+            if (this.tmp == elements.size())
+                this.tmp = 0;
 
-        if (this.tmp + 1 > elements.size()) {
-            this.tmp = 0;
-            if (this.tmp + 1 > elements.size()) {
-                logger.error("Keine Server zur Beantwortung der Anfrage verfuegbar");
-                return null;
-            } else {
-                try {
-                    Calculator c = (Calculator) Naming.lookup(elements.get(this.tmp));
-                    logger.info("Anfrage eines Clients weitergeleitet an Server " + elements.get(this.tmp));
-                    return c.pi(anzahl_nachkommastellen);
-                } catch (NotBoundException e) {
-                    e.printStackTrace();
-                } catch (MalformedURLException e) {
-                    e.printStackTrace();
-                }
-            }
-        } else {
             Calculator c = null;
+
             try {
                 c = (Calculator) Naming.lookup(elements.get(this.tmp));
             } catch (NotBoundException e) {
@@ -105,8 +93,13 @@ public class CalculatorBalancer extends UnicastRemoteObject implements Balancer,
             } catch (MalformedURLException e) {
                 e.printStackTrace();
             }
+
             logger.info("Anfrage eines Clients weitergeleitet an Server " + elements.get(this.tmp));
+            this.tmp++;
+
             return c.pi(anzahl_nachkommastellen);
+        } else {
+            logger.error("Keine Server zur Beantwortung der Anfrage verfuegbar");
         }
 
         return null;
