@@ -4,12 +4,17 @@ import java.rmi.Remote;
 import java.rmi.RemoteException;
 
 /**
- * Created by Stefan on 14.12.2014.
+ * Der Balancer besitzt die Aufgabe alle Anfragen so zu verteilen, dass die Auslastung der Server
+ * so klein wie moeglich ist.
+ *
+ * @author sgeyer
+ * @author mritter
+ * @version 1.0
  */
 public interface Balancer extends Remote {
 
     /**
-     * Returns the id for the next Calculator
+     * Gibt die ID des naechsten freien Servers zurueck
      *
      * @return
      */

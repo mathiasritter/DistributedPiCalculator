@@ -15,7 +15,7 @@ import java.rmi.server.UnicastRemoteObject;
 import static java.math.BigDecimal.ONE;
 import static java.math.BigDecimal.ROUND_HALF_UP;
 
-public class CalculatorServer extends UnicastRemoteObject implements Calculator, Server {
+public class CalculatorServer extends UnicastRemoteObject implements Server {
 
     private BigDecimal two;
     private BigDecimal four;
@@ -43,6 +43,7 @@ public class CalculatorServer extends UnicastRemoteObject implements Calculator,
     /**
      * @see at.geyerritter.dezsys07.Calculator#pi(int)
      */
+    @Override
     public BigDecimal pi(int anzahl_nachkommastellen) throws RemoteException {
 
         if (anzahl_nachkommastellen > 997) {

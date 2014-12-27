@@ -44,13 +44,6 @@
                 <filtering>false</filtering>
                 <directory>src/main/java</directory>
             </resource>
-            <resource>
-                <filtering>false</filtering>
-                <directory>files/</directory>
-                <includes>
-                    <include>**/*.pdf</include>
-                </includes>
-            </resource>
         </resources>
         <plugins>
             <!-- Set the compiler targets to 1.8 -->
