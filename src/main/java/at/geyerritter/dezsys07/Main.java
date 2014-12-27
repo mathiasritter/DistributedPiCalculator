@@ -26,7 +26,7 @@ import java.util.regex.Pattern;
 public class Main {
 
     private static Logger logger = LogManager.getLogger("Main");
-    private static int balancerPort;
+    private static int balancerPort, serverPort;
     private static String programType, balancerIP;
 
 
@@ -46,7 +46,7 @@ public class Main {
 
                 else if (programType.equalsIgnoreCase("Server")) {
 
-                    Server s = new CalculatorServer(balancerIP, balancerPort, balancerPort);
+                    CalculatorServer s = new CalculatorServer(balancerIP, balancerPort, serverPort);
                     s.registerAtRegistry();
                     Thread t = new Thread(s);
                     Runtime.getRuntime().addShutdownHook(t);
@@ -55,10 +55,10 @@ public class Main {
 
                     InputOutput io = new ConsoleIO();
                     NetworkController nc = new CalculatorController(io);
-                    nc.connect(balancerIP, balancerPort);
-
-                    Thread client = new Thread(new CalculatorClient(io, nc));
+                    Thread client = new Thread(new CalculatorClient(nc));
                     client.start();
+
+                    nc.connect(balancerIP, balancerPort);
 
                 }
 
@@ -112,16 +112,33 @@ public class Main {
 
 
 
-            //Option -p validieren
-            if ((cmd.getOptionValue("p") != null)) {
+            //Option -pb validieren
+            if ((cmd.getOptionValue("pb") != null)) {
                 try {
-                    if (Integer.parseInt((cmd.getOptionValue("p"))) < 0 || Integer.parseInt((cmd.getOptionValue("p"))) > 65535)
-                        throw new ParseException("Es muss eine gueltiger Port bei der Option -h eingegeben werden!");
+                    if (Integer.parseInt((cmd.getOptionValue("pb"))) < 0 || Integer.parseInt((cmd.getOptionValue("pb"))) > 65535)
+                        throw new ParseException("Es muss eine gueltiger Port bei der Option -pb eingegeben werden!");
                 } catch (Exception e) {
-                    throw new ParseException("Es muss eine gueltiger Port bei der Option -h eingegeben werden!");
+                    throw new ParseException("Es muss eine gueltiger Port bei der Option -pb eingegeben werden!");
                 }
+
+                balancerPort = Integer.parseInt(cmd.getOptionValue("pb"));
+
             } else
                 balancerPort = 1099;
+
+            //Option -ps validieren
+            if ((cmd.getOptionValue("ps") != null)) {
+                try {
+                    if (Integer.parseInt((cmd.getOptionValue("ps"))) < 0 || Integer.parseInt((cmd.getOptionValue("ps"))) > 65535)
+                        throw new ParseException("Es muss eine gueltiger Port bei der Option -ps eingegeben werden!");
+                } catch (Exception e) {
+                    throw new ParseException("Es muss eine gueltiger Port bei der Option -ps eingegeben werden!");
+                }
+
+                serverPort = Integer.parseInt(cmd.getOptionValue("ps"));
+
+            } else
+                serverPort = 1099;
 
 
             return true;
@@ -160,7 +177,12 @@ public class Main {
         options.addOption(OptionBuilder
                 .hasArg(true)
                 .withDescription("Port des Balancers. Standard: 1099")
-                .create("p"));
+                .create("pb"));
+
+        options.addOption(OptionBuilder
+                .hasArg(true)
+                .withDescription("Port des Servers. Standard: 1099")
+                .create("ps"));
 
         return options;
 

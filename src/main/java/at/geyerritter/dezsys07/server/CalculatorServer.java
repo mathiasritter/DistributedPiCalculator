@@ -26,7 +26,7 @@ import static java.math.BigDecimal.ROUND_HALF_UP;
  *
  * @version 1.0
  */
-public class CalculatorServer extends UnicastRemoteObject implements Server {
+public class CalculatorServer extends UnicastRemoteObject implements Server, Runnable {
 
     private BigDecimal two;
     private BigDecimal four;

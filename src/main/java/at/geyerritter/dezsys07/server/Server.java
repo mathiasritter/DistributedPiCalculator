@@ -13,7 +13,7 @@ import java.rmi.RemoteException;
  * @author mritter
  * @version 1.0
  */
-public interface Server extends Runnable, Calculator {
+public interface Server extends Calculator {
 
     /**
      * Loest die Verbindung zur Registry.
