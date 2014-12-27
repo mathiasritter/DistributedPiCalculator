@@ -2,6 +2,8 @@ package at.geyerritter.dezsys07.server;
 
 import at.geyerritter.dezsys07.Balancer;
 import at.geyerritter.dezsys07.Calculator;
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 
 import java.math.BigDecimal;
 import java.net.MalformedURLException;
@@ -22,6 +24,8 @@ public class CalculatorServer extends UnicastRemoteObject implements Server {
     private Balancer balancer;
     private Registry registry;
     private int id;
+
+    private static final Logger logger = LogManager.getLogger("CalculatorServer");
 
     public CalculatorServer(String balancerip, int registryport, int serverport) throws RemoteException, MalformedURLException, NotBoundException {
 
@@ -85,12 +89,14 @@ public class CalculatorServer extends UnicastRemoteObject implements Server {
     @Override
     public void unregisterAtRegistry() throws RemoteException, NotBoundException {
         registry.unbind("Calculator" + id);
+        logger.info("Server with the ID " + id + " unregistered at the registry");
     }
 
     @Override
     public void registerAtRegistry() throws RemoteException {
         id = balancer.getNextId();
         registry.rebind("Calculator" + id, this);
+        logger.info("Server with the ID " + id + " registered at the registry");
     }
 
     @Override

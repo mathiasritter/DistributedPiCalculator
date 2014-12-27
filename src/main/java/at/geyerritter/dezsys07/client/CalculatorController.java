@@ -1,6 +1,8 @@
 package at.geyerritter.dezsys07.client;
 
 import at.geyerritter.dezsys07.Calculator;
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 
 import java.net.MalformedURLException;
 import java.rmi.Naming;
@@ -13,6 +15,7 @@ public class CalculatorController implements NetworkController {
 
 	private Calculator stub;
 
+	private static final Logger logger = LogManager.getLogger("CalculatorController");
 
 	public CalculatorController(InputOutput io) {
 		this.io = io;
@@ -20,8 +23,8 @@ public class CalculatorController implements NetworkController {
 
 	/**
 	 * @see NetworkController#request(int)
-	 * 
-	 *  
+	 *
+	 *
 	 */
 	public void request(int parameter) throws RemoteException {
 
@@ -32,8 +35,8 @@ public class CalculatorController implements NetworkController {
 
 	/**
 	 * @see NetworkController#setIO(InputOutput)
-	 * 
-	 *  
+	 *
+	 *
 	 */
 	public void setIO(InputOutput io) {
 		this.io = io;
@@ -56,6 +59,7 @@ public class CalculatorController implements NetworkController {
 
 		this.stub = (Calculator) Naming.lookup(url);
 
+		logger.info("Connection to Balancer established.");
 	}
 
 }

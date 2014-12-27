@@ -2,6 +2,8 @@ package at.geyerritter.dezsys07.server;
 
 import at.geyerritter.dezsys07.Balancer;
 import at.geyerritter.dezsys07.Calculator;
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 
 import java.math.BigDecimal;
 import java.net.MalformedURLException;
@@ -22,6 +24,8 @@ public class ServerBalancer extends UnicastRemoteObject implements Balancer, Cal
     private int tmp;
     private int port;
     private int nextId;
+
+    private static final Logger logger = LogManager.getLogger("ServerBalancer");
 
     public ServerBalancer(int port) throws RemoteException {
 
@@ -58,12 +62,12 @@ public class ServerBalancer extends UnicastRemoteObject implements Balancer, Cal
             e.printStackTrace();
         }
 
-        System.out.println("Size of elements " + elements.size());
+        logger.info("Size of elements " + elements.size());
 
         if (this.tmp + 1 > elements.size()) {
             this.tmp = 0;
             if (this.tmp + 1 > elements.size()) {
-                System.out.println("Null returned, weil" + tmp++ + " > " + elements.size());
+                logger.info("Null returned, weil" + tmp++ + " > " + elements.size());
                 return null;
             } else {
                 try {

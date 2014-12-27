@@ -1,5 +1,8 @@
 package at.geyerritter.dezsys07.client;
 
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
+
 import java.rmi.RemoteException;
 
 /**
@@ -10,13 +13,14 @@ import java.rmi.RemoteException;
  *
  * @author sgeyer
  * @author mritter
- *
  * @version 1.0
  */
 public class CalculatorClient implements Runnable {
 
     private InputOutput io;
     private NetworkController nc;
+
+    private static final Logger logger = LogManager.getLogger("CalculatorClient");
 
     public CalculatorClient(InputOutput io, NetworkController nc) {
         this.io = io;
@@ -25,12 +29,13 @@ public class CalculatorClient implements Runnable {
 
     @Override
     public void run() {
-        while(true) {
+        while (true) {
             try {
-                int parameter = Integer.parseInt(io.readContent());
-                nc.request(parameter);
+                // Die Anzahl der Nachkommastellen wird eingelesen und ein Request an den NetworkController.
+                int anzahlStellen = Integer.parseInt(io.readContent());
+                nc.request(anzahlStellen);
             } catch (NumberFormatException e) {
-                System.out.println("Geben Sie eine Zahl ein, um die Abfrage zu starten");
+                logger.info("Geben Sie eine Zahl ein, um die Abfrage zu starten");
             } catch (RemoteException e) {
                 e.printStackTrace();
             }
