@@ -94,12 +94,12 @@ public class CalculatorBalancer extends UnicastRemoteObject implements Balancer,
                 e.printStackTrace();
             }
 
-            logger.info("Anfrage eines Clients weitergeleitet an Server " + elements.get(this.tmp));
+            logger.info("Request from client directed to server " + elements.get(this.tmp));
             this.tmp++;
 
             return c.pi(anzahl_nachkommastellen);
         } else {
-            logger.error("Keine Server zur Beantwortung der Anfrage verfuegbar");
+            logger.error("No Server for processing request is currently available.");
         }
 
         return null;

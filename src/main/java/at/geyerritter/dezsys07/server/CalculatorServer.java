@@ -106,7 +106,7 @@ public class CalculatorServer extends UnicastRemoteObject implements Server, Run
     @Override
     public void unregisterAtRegistry() throws RemoteException, NotBoundException {
         registry.unbind("Calculator" + id);
-        logger.info("Server with the ID " + id + " unregistered at the registry");
+        logger.info("Server with the ID " + id + " unregistered at the balancer");
     }
 
     /**
@@ -116,7 +116,7 @@ public class CalculatorServer extends UnicastRemoteObject implements Server, Run
     public void registerAtRegistry() throws RemoteException {
         id = balancer.getNextId();
         registry.rebind("Calculator" + id, this);
-        logger.info("Server with the ID " + id + " registered at the registry");
+        logger.info("Server with the ID " + id + " registered at the balancer");
     }
 
     @Override
@@ -124,7 +124,7 @@ public class CalculatorServer extends UnicastRemoteObject implements Server, Run
         try {
             this.unregisterAtRegistry();
         } catch (RemoteException | NotBoundException e) {
-            logger.info("Balancer wurde bereits beendet, deshalb konnte sich der Server nicht abmelden");
+            logger.info("Server couldn't be unregistered at the balancer because balancer is offline.");
         }
     }
 }

@@ -38,9 +38,9 @@ public class CalculatorClient implements Runnable {
                 int anzahlStellen = Integer.parseInt(this.nc.getIO().readContent());
                 nc.request(anzahlStellen);
             } catch (NumberFormatException e) {
-                logger.info("Geben Sie eine Zahl ein, um die Abfrage zu starten");
+                logger.info("Enter a number to request the balancer for pi.");
             } catch (RemoteException e) {
-                e.printStackTrace();
+                logger.info("Error while sending a request to the balancer. The balancer might be offline.");
             }
 
         }
