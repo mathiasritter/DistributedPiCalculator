@@ -18,6 +18,12 @@ public class CalculatorClient implements Runnable {
     private InputOutput io;
     private NetworkController nc;
 
+    /**
+     * Zuweisen der Eingabe/Ausgabe sowie des Networkcontrollers
+     *
+     * @param io Eingabe/Ausgabe
+     * @param nc Networkcontroller
+     */
     public CalculatorClient(InputOutput io, NetworkController nc) {
         this.io = io;
         this.nc = nc;

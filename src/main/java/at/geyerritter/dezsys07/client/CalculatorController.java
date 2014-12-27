@@ -7,6 +7,14 @@ import java.rmi.Naming;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 
+/**
+ * Ist Zustaendig fuer das Senden und Verarbeiten von Anfragen an den Balancer.
+ *
+ * @author sgeyer
+ * @author mritter
+ *
+ * @version 1.0
+ */
 public class CalculatorController implements NetworkController {
 
 	private InputOutput io;
@@ -14,14 +22,17 @@ public class CalculatorController implements NetworkController {
 	private Calculator stub;
 
 
+	/**
+	 * Es wird die Eingabe/Ausgabe im Konstruktor gesetzt.
+	 *
+	 * @param io Eingabe/Ausgabe
+	 */
 	public CalculatorController(InputOutput io) {
 		this.io = io;
 	}
 
 	/**
 	 * @see NetworkController#request(int)
-	 * 
-	 *  
 	 */
 	public void request(int parameter) throws RemoteException {
 
@@ -32,8 +43,6 @@ public class CalculatorController implements NetworkController {
 
 	/**
 	 * @see NetworkController#setIO(InputOutput)
-	 * 
-	 *  
 	 */
 	public void setIO(InputOutput io) {
 		this.io = io;
@@ -42,8 +51,6 @@ public class CalculatorController implements NetworkController {
 
 	/**
 	 * @see NetworkController#connect(String, int)
-	 * 
-	 *  
 	 */
 	public void connect(String toIp, int toPort) throws RemoteException, NotBoundException, MalformedURLException {
 

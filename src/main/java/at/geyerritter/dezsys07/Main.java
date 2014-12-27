@@ -25,11 +25,17 @@ import java.util.regex.Pattern;
  */
 public class Main {
 
-    private static Logger logger = LogManager.getLogger(Main.class.getName());
+    private static Logger logger = LogManager.getLogger("Main");
     private static int balancerPort;
     private static String programType, balancerIP;
 
 
+    /**
+     * Verarbeitung der Kommandozeilenargumente und
+     * Starten des Balancers, Server oder Clients.
+     *
+     * @param args Kommandozeilenargumente
+     */
     public static void main(String[] args) {
 
         try {
@@ -49,20 +55,16 @@ public class Main {
 
                     InputOutput io = new ConsoleIO();
                     NetworkController nc = new CalculatorController(io);
+                    nc.connect(balancerIP, balancerPort);
+
                     Thread client = new Thread(new CalculatorClient(io, nc));
                     client.start();
-
-                    nc.connect(balancerIP, balancerPort);
 
                 }
 
             }
-        } catch (RemoteException e) {
-            e.printStackTrace();
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        } catch (NotBoundException e) {
-            e.printStackTrace();
+        } catch (RemoteException | MalformedURLException | NotBoundException e) {
+            logger.error(e.getMessage());
         }
 
     }
