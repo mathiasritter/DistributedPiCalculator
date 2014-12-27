@@ -4,6 +4,7 @@ import at.geyerritter.dezsys07.Calculator;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 
+import java.math.BigDecimal;
 import java.net.MalformedURLException;
 import java.rmi.Naming;
 import java.rmi.NotBoundException;
@@ -39,12 +40,12 @@ public class CalculatorController implements NetworkController {
 	 */
 	public void request(int parameter) throws RemoteException {
 
-		String pi = stub.pi(parameter).toString();
+		BigDecimal pi = stub.pi(parameter);
 
 		if (pi == null)
-			logger.error("Anfrage nicht beantwortet werden, da derzeit kein Server verfuegbar ist.");
+			logger.error("Anfrage konnte nicht beantwortet werden, da derzeit kein Server verfuegbar ist.");
 		else
-			io.displayContent(pi);
+			io.displayContent(pi.toString());
 
 	}
 
