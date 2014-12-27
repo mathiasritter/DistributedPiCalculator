@@ -25,7 +25,7 @@ public interface Server extends Runnable, Calculator {
     public void unregisterAtRegistry() throws RemoteException, NotBoundException;
 
     /**
-     * Traegt den Server in der Registry ein und kann ab diesem Zeitpunkt wieder vom Balancer
+     * Traegt den Server in der Registry ein und kann ab diesem Zeitpunkt vom Balancer
      * angesprochen werden.
      *
      * @throws RemoteException

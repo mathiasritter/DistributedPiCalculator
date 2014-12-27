@@ -17,6 +17,15 @@ import java.rmi.server.UnicastRemoteObject;
 import static java.math.BigDecimal.ONE;
 import static java.math.BigDecimal.ROUND_HALF_UP;
 
+/**
+ * Der Server verarbeitet alle Anfragen des Balancers.
+ * Er meldet sich beim Balancer an und wieder ab.
+ *
+ * @author sgeyer
+ * @author mritter
+ *
+ * @version 1.0
+ */
 public class CalculatorServer extends UnicastRemoteObject implements Server {
 
     private BigDecimal two;
@@ -33,8 +42,6 @@ public class CalculatorServer extends UnicastRemoteObject implements Server {
             System.setProperty("java.security.policy", System.class.getResource("/java.policy").toString());
             System.setSecurityManager( new SecurityManager() );
         }
-
-        //UnicastRemoteObject.exportObject(this, serverport);
 
 		this.registry = LocateRegistry.getRegistry(registryport);
         this.balancer = (Balancer) Naming.lookup("rmi://" + balancerip + ":" + registryport + "/Balancer");
@@ -72,6 +79,13 @@ public class CalculatorServer extends UnicastRemoteObject implements Server {
         return a.add(b).multiply(a.add(b)).divide(t.multiply(this.four), anzahl_nachkommastellen, ROUND_HALF_UP);
     }
 
+    /**
+     * Ziehen der Quadratwzurzel mit der angegebenen Anzahl an Nachkommastellen.
+     *
+     * @param a Zahl, von der die Quadratwurzel gezogen wird
+     * @param anzahl_nachkommastellen Anzahl der Nachkommastellen
+     * @return Ergebnis der Wurzel
+     */
     private BigDecimal sqrt(BigDecimal a, final int anzahl_nachkommastellen) {
         BigDecimal x0 = new BigDecimal("0");
         BigDecimal x1 = new BigDecimal(Math.sqrt(a.doubleValue()));
@@ -86,12 +100,18 @@ public class CalculatorServer extends UnicastRemoteObject implements Server {
         return x1;
     }
 
+    /**
+     * @see Server#unregisterAtRegistry()
+     */
     @Override
     public void unregisterAtRegistry() throws RemoteException, NotBoundException {
         registry.unbind("Calculator" + id);
         logger.info("Server with the ID " + id + " unregistered at the registry");
     }
 
+    /**
+     * @see at.geyerritter.dezsys07.server.Server#registerAtRegistry()
+     */
     @Override
     public void registerAtRegistry() throws RemoteException {
         id = balancer.getNextId();
