@@ -25,10 +25,10 @@ public class CalculatorClientTest {
 
     }
 
-    /**@Test
+    @Test
     public void testRun() throws Exception {
         CalculatorClient c = new CalculatorClient(new CalculatorController(new ConsoleIO()));
         c.run();
-        assertTrue(true);
-    }**/
+        assertTrue(((String) this.appender.getLog().get(0).getMessage()).contains(""));
+    }
 }

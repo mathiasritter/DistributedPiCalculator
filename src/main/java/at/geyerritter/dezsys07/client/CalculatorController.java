@@ -52,6 +52,11 @@ public class CalculatorController implements NetworkController {
 		this.io = io;
 	}
 
+	@Override
+	public InputOutput getIO() {
+		return this.io;
+	}
+
 
 	/**
 	 * @see NetworkController#connect(String, int)
