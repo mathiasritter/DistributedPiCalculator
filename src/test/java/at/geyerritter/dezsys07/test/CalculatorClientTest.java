@@ -28,7 +28,7 @@ public class CalculatorClientTest {
     @Test
     public void testRun() throws Exception {
         CalculatorClient c = new CalculatorClient(new CalculatorController(new ConsoleIO()));
-        c.run();
-        assertTrue(((String) this.appender.getLog().get(0).getMessage()).contains(""));
+        c.getNetworkController().request(5);
+        assertTrue(((String) this.appender.getLog().get(0).getMessage()).contains("3.14159"));
     }
 }

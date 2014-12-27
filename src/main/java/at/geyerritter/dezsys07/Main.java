@@ -57,7 +57,7 @@ public class Main {
                     NetworkController nc = new CalculatorController(io);
                     nc.connect(balancerIP, balancerPort);
 
-                    Thread client = new Thread(new CalculatorClient(io, nc));
+                    Thread client = new Thread(new CalculatorClient(nc));
                     client.start();
 
                 }

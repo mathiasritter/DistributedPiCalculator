@@ -45,4 +45,12 @@ public class CalculatorClient implements Runnable {
 
         }
     }
+
+    public NetworkController getNetworkController() {
+        return nc;
+    }
+
+    public void setNetworkController(NetworkController nc) {
+        this.nc = nc;
+    }
 }
