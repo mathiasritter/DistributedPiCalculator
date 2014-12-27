@@ -105,6 +105,7 @@ public class CalculatorBalancer extends UnicastRemoteObject implements Balancer,
             } catch (MalformedURLException e) {
                 e.printStackTrace();
             }
+            logger.info("Anfrage eines Clients weitergeleitet an Server " + elements.get(this.tmp));
             return c.pi(anzahl_nachkommastellen);
         }
 
