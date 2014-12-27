@@ -21,10 +21,9 @@ import java.util.List;
  *
  * @author sgeyer
  * @author mritter
- *
  * @version 1.0
  */
-public class CalculatorBalancer extends UnicastRemoteObject implements Balancer, Calculator  {
+public class CalculatorBalancer extends UnicastRemoteObject implements Balancer, Calculator {
 
     private int tmp;
     private int port;
@@ -39,9 +38,9 @@ public class CalculatorBalancer extends UnicastRemoteObject implements Balancer,
      */
     public CalculatorBalancer(int port) throws RemoteException {
 
-        if ( System.getSecurityManager() == null ) {
+        if (System.getSecurityManager() == null) {
             System.setProperty("java.security.policy", System.class.getResource("/java.policy").toString());
-            System.setSecurityManager( new SecurityManager() );
+            System.setSecurityManager(new SecurityManager());
         }
 
         this.port = port;

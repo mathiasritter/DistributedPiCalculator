@@ -17,7 +17,6 @@ import java.rmi.RemoteException;
  */
 public class CalculatorClient implements Runnable {
 
-    private InputOutput io;
     private NetworkController nc;
 
     private static final Logger logger = LogManager.getLogger("CalculatorClient");
@@ -25,11 +24,9 @@ public class CalculatorClient implements Runnable {
     /**
      * Zuweisen der Eingabe/Ausgabe sowie des Networkcontrollers
      *
-     * @param io Eingabe/Ausgabe
      * @param nc Networkcontroller
      */
-    public CalculatorClient(InputOutput io, NetworkController nc) {
-        this.io = io;
+    public CalculatorClient(NetworkController nc) {
         this.nc = nc;
     }
 
@@ -38,7 +35,7 @@ public class CalculatorClient implements Runnable {
         while (true) {
             try {
                 // Die Anzahl der Nachkommastellen wird eingelesen und ein Request an den NetworkController.
-                int anzahlStellen = Integer.parseInt(io.readContent());
+                int anzahlStellen = Integer.parseInt(this.nc.getIO().readContent());
                 nc.request(anzahlStellen);
             } catch (NumberFormatException e) {
                 logger.info("Geben Sie eine Zahl ein, um die Abfrage zu starten");
