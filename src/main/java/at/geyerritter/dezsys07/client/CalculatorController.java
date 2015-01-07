@@ -1,6 +1,6 @@
 package at.geyerritter.dezsys07.client;
 
-import at.geyerritter.dezsys07.Calculator;
+import at.geyerritter.dezsys07.server.Calculator;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 

@@ -1,7 +1,6 @@
 package at.geyerritter.dezsys07.server;
 
-import at.geyerritter.dezsys07.Balancer;
-import at.geyerritter.dezsys07.Calculator;
+import at.geyerritter.dezsys07.balancer.Balancer;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 
@@ -10,8 +9,6 @@ import java.net.MalformedURLException;
 import java.rmi.Naming;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
-import java.rmi.registry.LocateRegistry;
-import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
 
 import static java.math.BigDecimal.ONE;
@@ -26,13 +23,11 @@ import static java.math.BigDecimal.ROUND_HALF_UP;
  *
  * @version 1.0
  */
-public class CalculatorServer extends UnicastRemoteObject implements Server, Runnable {
+public class CalculatorServer extends UnicastRemoteObject implements Calculator, Runnable {
 
     private BigDecimal two;
     private BigDecimal four;
     private Balancer balancer;
-    private Registry registry;
-    private int id;
 
     private static final Logger logger = LogManager.getLogger("CalculatorServer");
 
@@ -43,16 +38,22 @@ public class CalculatorServer extends UnicastRemoteObject implements Server, Run
             System.setSecurityManager( new SecurityManager() );
         }
 
-		this.registry = LocateRegistry.getRegistry(registryport);
         this.balancer = (Balancer) Naming.lookup("rmi://" + balancerip + ":" + registryport + "/Balancer");
 
+        // Beim Balancer anmelden
+        this.balancer.register(this);
+        logger.info("Server registered at the balancer");
+
+        // Beim Beenden des Servers beim Balancer abmelden
+        Thread t = new Thread(this);
+        Runtime.getRuntime().addShutdownHook(t);
 
         this.two = new BigDecimal(2);
         this.four = new BigDecimal(4);
     }
 
     /**
-     * @see at.geyerritter.dezsys07.Calculator#pi(int)
+     * @see Calculator#pi(int)
      */
     @Override
     public BigDecimal pi(int anzahl_nachkommastellen) throws RemoteException {
@@ -100,30 +101,12 @@ public class CalculatorServer extends UnicastRemoteObject implements Server, Run
         return x1;
     }
 
-    /**
-     * @see Server#unregisterAtRegistry()
-     */
-    @Override
-    public void unregisterAtRegistry() throws RemoteException, NotBoundException {
-        registry.unbind("Calculator" + id);
-        logger.info("Server with the ID " + id + " unregistered at the balancer");
-    }
-
-    /**
-     * @see at.geyerritter.dezsys07.server.Server#registerAtRegistry()
-     */
-    @Override
-    public void registerAtRegistry() throws RemoteException {
-        id = balancer.getNextId();
-        registry.rebind("Calculator" + id, this);
-        logger.info("Server with the ID " + id + " registered at the balancer");
-    }
-
     @Override
     public void run() {
         try {
-            this.unregisterAtRegistry();
-        } catch (RemoteException | NotBoundException e) {
+            this.balancer.unregister(this);
+            logger.info("Server unregistered at the balancer");
+        } catch (RemoteException e) {
             logger.info("Server couldn't be unregistered at the balancer because balancer is offline.");
         }
     }

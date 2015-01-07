@@ -3,7 +3,6 @@ package at.geyerritter.dezsys07;
 import at.geyerritter.dezsys07.balancer.CalculatorBalancer;
 import at.geyerritter.dezsys07.client.*;
 import at.geyerritter.dezsys07.server.CalculatorServer;
-import at.geyerritter.dezsys07.server.Server;
 import org.apache.commons.cli.*;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
@@ -47,9 +46,6 @@ public class Main {
                 else if (programType.equalsIgnoreCase("Server")) {
 
                     CalculatorServer s = new CalculatorServer(balancerIP, balancerPort, serverPort);
-                    s.registerAtRegistry();
-                    Thread t = new Thread(s);
-                    Runtime.getRuntime().addShutdownHook(t);
 
                 } else if (programType.equalsIgnoreCase("Client")) {
 

@@ -32,6 +32,7 @@ public class CalculatorClient implements Runnable {
 
     @Override
     public void run() {
+        //noinspection InfiniteLoopStatement
         while (true) {
             try {
                 // Die Anzahl der Nachkommastellen wird eingelesen und ein Request an den NetworkController.
@@ -48,9 +49,5 @@ public class CalculatorClient implements Runnable {
 
     public NetworkController getNetworkController() {
         return nc;
-    }
-
-    public void setNetworkController(NetworkController nc) {
-        this.nc = nc;
     }
 }
