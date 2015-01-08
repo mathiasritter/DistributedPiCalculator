@@ -24,7 +24,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 public class CalculatorBalancer extends UnicastRemoteObject implements Balancer, Calculator {
 
     private int tmp;
-    private List<Calculator> servers;
+    private final List<Calculator> servers;
 
     private static final Logger logger = LogManager.getLogger("CalculatorBalancer");
 
@@ -58,18 +58,24 @@ public class CalculatorBalancer extends UnicastRemoteObject implements Balancer,
 
         if (servers.size() > 0) {
 
-            // Ermitteln, welcher Server als naechster dran ist
-            synchronized (this) {
+            Calculator c = null;
+
+            // Ermitteln, des naechsten Servers (synchronized, da Zugriff parallel erfolgen kann)
+            synchronized (servers) {
                 if (this.tmp >= servers.size())
                     this.tmp = 0;
+                // Server auswaehlen (Zaehlvariable-1, da mit dem Index zugegriffen wird und der bei 0 beginnt)
+                c = servers.get(this.tmp);
                 this.tmp++;
             }
 
-            // Server auswaehlen (Zaehlvariable-1, da mit dem Index zugegriffen wird und der bei 0 beginnt)
-            Calculator c = servers.get(this.tmp-1);
             logger.info("Request from client directed to server " + servers.get(this.tmp));
 
-            return c.pi(anzahl_nachkommastellen);
+            if (c != null)
+                return c.pi(anzahl_nachkommastellen);
+            else
+                return null;
+
         } else {
             logger.error("No Server for processing request is currently available.");
         }
