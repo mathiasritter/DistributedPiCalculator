@@ -32,15 +32,16 @@ public class CalculatorClient implements Runnable {
 
     @Override
     public void run() {
+        //noinspection InfiniteLoopStatement
         while (true) {
             try {
                 // Die Anzahl der Nachkommastellen wird eingelesen und ein Request an den NetworkController.
                 int anzahlStellen = Integer.parseInt(this.nc.getIO().readContent());
                 nc.request(anzahlStellen);
             } catch (NumberFormatException e) {
-                logger.info("Geben Sie eine Zahl ein, um die Abfrage zu starten");
+                logger.info("Enter a number to request the balancer for pi.");
             } catch (RemoteException e) {
-                e.printStackTrace();
+                logger.info("Error while sending a request to the balancer. The balancer might be offline.");
             }
 
         }
@@ -48,9 +49,5 @@ public class CalculatorClient implements Runnable {
 
     public NetworkController getNetworkController() {
         return nc;
-    }
-
-    public void setNetworkController(NetworkController nc) {
-        this.nc = nc;
     }
 }

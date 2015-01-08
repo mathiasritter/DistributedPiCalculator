@@ -1,14 +1,10 @@
 package at.geyerritter.dezsys07.balancer;
 
-import at.geyerritter.dezsys07.Balancer;
-import at.geyerritter.dezsys07.Calculator;
+import at.geyerritter.dezsys07.server.Calculator;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 
 import java.math.BigDecimal;
-import java.net.MalformedURLException;
-import java.rmi.Naming;
-import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
@@ -28,8 +24,7 @@ import java.util.List;
 public class CalculatorBalancer extends UnicastRemoteObject implements Balancer, Calculator {
 
     private int tmp;
-    private int port;
-    private int nextId;
+    private List<Calculator> servers;
 
     private static final Logger logger = LogManager.getLogger("CalculatorBalancer");
 
@@ -43,65 +38,54 @@ public class CalculatorBalancer extends UnicastRemoteObject implements Balancer,
      */
     public CalculatorBalancer(int port) throws RemoteException {
 
+        // Liste fuer verfuegbare Calculator-Server
+        this.servers = new ArrayList<>();
+
         if (System.getSecurityManager() == null) {
             System.setProperty("java.security.policy", System.class.getResource("/java.policy").toString());
             System.setSecurityManager(new SecurityManager());
         }
 
-        this.port = port;
-
         Registry registry = LocateRegistry.createRegistry(port);
         registry.rebind("Balancer", this);
     }
 
-    /**
-     * @see at.geyerritter.dezsys07.Balancer#getNextId()
-     */
-    public int getNextId() throws RemoteException {
-        this.nextId++;
-        return this.nextId;
-    }
 
     /**
-     * @see at.geyerritter.dezsys07.Calculator#pi(int)
+     * @see at.geyerritter.dezsys07.server.Calculator#pi(int)
      */
     public BigDecimal pi(int anzahl_nachkommastellen) throws RemoteException {
 
-        List<String> elements = new ArrayList<>();
-
-        try {
-            // IP ist hardcoded weil wir die Registry im Konstruktor lokal initialisieren.
-            String[] entries = Naming.list("rmi://127.0.0.1:" + port);
-
-            for (String s : entries)
-                if (s.contains("Calculator"))
-                    elements.add(s);
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        }
-
-        if (elements.size() > 0) {
-            if (this.tmp == elements.size())
+        if (servers.size() > 0) {
+            if (this.tmp >= servers.size())
                 this.tmp = 0;
 
-            Calculator c = null;
 
-            try {
-                c = (Calculator) Naming.lookup(elements.get(this.tmp));
-            } catch (NotBoundException e) {
-                e.printStackTrace();
-            } catch (MalformedURLException e) {
-                e.printStackTrace();
-            }
-
-            logger.info("Anfrage eines Clients weitergeleitet an Server " + elements.get(this.tmp));
-                     this.tmp++;
+            Calculator c = servers.get(this.tmp);
+            logger.info("Request from client directed to server " + servers.get(this.tmp));
+            this.tmp++;
 
             return c.pi(anzahl_nachkommastellen);
         } else {
-            logger.error("Keine Server zur Beantwortung der Anfrage verfuegbar");
+            logger.error("No Server for processing request is currently available.");
         }
 
         return null;
+    }
+
+    /**
+     * @see at.geyerritter.dezsys07.balancer.Balancer#register(at.geyerritter.dezsys07.server.Calculator)
+     */
+    public void register(Calculator server) throws RemoteException {
+        servers.add(server);
+        logger.info("New server registered: " + server);
+    }
+
+    /**
+     * @see at.geyerritter.dezsys07.balancer.Balancer#unregister(at.geyerritter.dezsys07.server.Calculator)
+     */
+    public void unregister(Calculator server) throws RemoteException {
+        servers.remove(server);
+        logger.info("Server unregistered: " + server);
     }
 }
