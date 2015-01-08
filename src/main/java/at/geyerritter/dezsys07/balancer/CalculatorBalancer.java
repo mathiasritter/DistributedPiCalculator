@@ -25,7 +25,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 public class CalculatorBalancer extends UnicastRemoteObject implements Balancer, Calculator {
 
     private int tmp;
-    private List<Calculator> servers;
+    private final List<Calculator> servers;
 
     private static final Logger logger = LogManager.getLogger("CalculatorBalancer");
 
@@ -67,10 +67,9 @@ public class CalculatorBalancer extends UnicastRemoteObject implements Balancer,
                     this.tmp = 0;
                 // Server auswaehlen
                 c = servers.get(this.tmp);
+                logger.info("Request from client directed to server " + servers.get(this.tmp));
                 this.tmp++;
             }
-
-            logger.info("Request from client directed to server " + servers.get(this.tmp));
 
             if (c != null)
                 return c.pi(anzahl_nachkommastellen);
