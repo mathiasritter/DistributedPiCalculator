@@ -18,7 +18,14 @@ import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 
-public class CalculatorClientTest {
+/**
+ * Testen des Calculators ausgenommen Kommandoverarbeitung
+ *
+ * @author sgeyer
+ * @author mritter
+ * @version 1.0
+ */
+public class CalculatorTest {
 
     private TestAppender appender;
 
@@ -48,7 +55,7 @@ public class CalculatorClientTest {
      * Durch direktes senden an den Networkcontroller wird die Konsoleneingabe übersprungen
      */
     public void testClient2() throws RemoteException, NotBoundException, MalformedURLException, InterruptedException {
-        CalculatorServer cs = new CalculatorServer("127.0.0.1", 1099, 4567);
+        CalculatorServer cs = new CalculatorServer("127.0.0.1", 1099);
         Thread t = new Thread(cs);
         Runtime.getRuntime().addShutdownHook(t);
         CalculatorClient c = new CalculatorClient(new CalculatorController(new ConsoleIO()));
@@ -75,7 +82,7 @@ public class CalculatorClientTest {
      * Testen ob der Wert trotz zurueckgesetztem Security Manager ausgegeben wird
      */
     public void testClient4() throws RemoteException, NotBoundException, MalformedURLException, InterruptedException {
-        CalculatorServer cs = new CalculatorServer("127.0.0.1", 1099, 4567);
+        CalculatorServer cs = new CalculatorServer("127.0.0.1", 1099);
         Thread t = new Thread(cs);
         Runtime.getRuntime().addShutdownHook(t);
         System.setSecurityManager(null);

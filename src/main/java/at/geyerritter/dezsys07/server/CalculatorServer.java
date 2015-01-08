@@ -31,7 +31,15 @@ public class CalculatorServer extends UnicastRemoteObject implements Calculator,
 
     private static final Logger logger = LogManager.getLogger("CalculatorServer");
 
-    public CalculatorServer(String balancerip, int registryport, int serverport) throws RemoteException, MalformedURLException, NotBoundException {
+    /**
+     *
+     * @param balancerip Ip des Balancers (Registry)
+     * @param registryport Port des Balancers (Registry)
+     * @throws RemoteException Fehler waehrend der Netzwerkkommunikation
+     * @throws MalformedURLException Fehler waehrend dem Verbinden zum Balancer
+     * @throws NotBoundException Fehler beim Binden des Balancers
+     */
+    public CalculatorServer(String balancerip, int registryport) throws RemoteException, MalformedURLException, NotBoundException {
 
         if ( System.getSecurityManager() == null ) {
             System.setProperty("java.security.policy", System.class.getResource("/java.policy").toString());
