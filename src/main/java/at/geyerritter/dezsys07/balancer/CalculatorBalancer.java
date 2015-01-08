@@ -9,6 +9,7 @@ import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
@@ -24,7 +25,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 public class CalculatorBalancer extends UnicastRemoteObject implements Balancer, Calculator {
 
     private int tmp;
-    private final List<Calculator> servers;
+    private List<Calculator> servers;
 
     private static final Logger logger = LogManager.getLogger("CalculatorBalancer");
 
@@ -39,7 +40,7 @@ public class CalculatorBalancer extends UnicastRemoteObject implements Balancer,
     public CalculatorBalancer(int port) throws RemoteException {
 
         // Liste fuer verfuegbare Calculator-Server
-        this.servers = new CopyOnWriteArrayList<>();
+        this.servers = new ArrayList<>();
 
         if (System.getSecurityManager() == null) {
             System.setProperty("java.security.policy", System.class.getResource("/java.policy").toString());
@@ -64,7 +65,7 @@ public class CalculatorBalancer extends UnicastRemoteObject implements Balancer,
             synchronized (servers) {
                 if (this.tmp >= servers.size())
                     this.tmp = 0;
-                // Server auswaehlen (Zaehlvariable-1, da mit dem Index zugegriffen wird und der bei 0 beginnt)
+                // Server auswaehlen
                 c = servers.get(this.tmp);
                 this.tmp++;
             }
@@ -95,7 +96,9 @@ public class CalculatorBalancer extends UnicastRemoteObject implements Balancer,
      * @see at.geyerritter.dezsys07.balancer.Balancer#unregister(at.geyerritter.dezsys07.server.Calculator)
      */
     public void unregister(Calculator server) throws RemoteException {
-        servers.remove(server);
+        synchronized (servers) {
+            servers.remove(server);
+        }
         logger.info("Server unregistered: " + server);
     }
 }
