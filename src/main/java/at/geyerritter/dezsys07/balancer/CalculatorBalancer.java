@@ -25,7 +25,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 public class CalculatorBalancer extends UnicastRemoteObject implements Balancer, Calculator {
 
     private int tmp;
-    private List<Calculator> servers;
+    private final List<Calculator> servers;
 
     private static final Logger logger = LogManager.getLogger("CalculatorBalancer");
 
