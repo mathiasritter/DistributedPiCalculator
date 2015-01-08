@@ -9,8 +9,8 @@ import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
  * Der Balancer vermittelt Anfragen der Clients an Server weiter.
@@ -39,7 +39,7 @@ public class CalculatorBalancer extends UnicastRemoteObject implements Balancer,
     public CalculatorBalancer(int port) throws RemoteException {
 
         // Liste fuer verfuegbare Calculator-Server
-        this.servers = new ArrayList<>();
+        this.servers = new CopyOnWriteArrayList<>();
 
         if (System.getSecurityManager() == null) {
             System.setProperty("java.security.policy", System.class.getResource("/java.policy").toString());
@@ -57,13 +57,17 @@ public class CalculatorBalancer extends UnicastRemoteObject implements Balancer,
     public BigDecimal pi(int anzahl_nachkommastellen) throws RemoteException {
 
         if (servers.size() > 0) {
-            if (this.tmp >= servers.size())
-                this.tmp = 0;
 
+            // Ermitteln, welcher Server als naechster dran ist
+            synchronized (this) {
+                if (this.tmp >= servers.size())
+                    this.tmp = 0;
+                this.tmp++;
+            }
 
-            Calculator c = servers.get(this.tmp);
+            // Server auswaehlen (Zaehlvariable-1, da mit dem Index zugegriffen wird und der bei 0 beginnt)
+            Calculator c = servers.get(this.tmp-1);
             logger.info("Request from client directed to server " + servers.get(this.tmp));
-            this.tmp++;
 
             return c.pi(anzahl_nachkommastellen);
         } else {
