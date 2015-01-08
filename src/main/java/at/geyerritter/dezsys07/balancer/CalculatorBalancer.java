@@ -67,10 +67,9 @@ public class CalculatorBalancer extends UnicastRemoteObject implements Balancer,
                     this.tmp = 0;
                 // Server auswaehlen
                 c = servers.get(this.tmp);
+                logger.info("Request from client directed to server " + servers.get(this.tmp));
                 this.tmp++;
             }
-
-            logger.info("Request from client directed to server " + servers.get(this.tmp));
 
             if (c != null)
                 return c.pi(anzahl_nachkommastellen);
