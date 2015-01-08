@@ -48,6 +48,11 @@
                 <filtering>false</filtering>
                 <directory>src/main/resources</directory>
             </resource>
+            <resource>
+                <filtering>false</filtering>
+                <directory>documents</directory>
+                <targetPath>doc</targetPath>
+            </resource>
         </resources>
         <plugins>
             <!-- Set the compiler targets to 1.8 -->
