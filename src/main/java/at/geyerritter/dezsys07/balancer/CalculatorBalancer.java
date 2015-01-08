@@ -47,7 +47,12 @@ public class CalculatorBalancer extends UnicastRemoteObject implements Balancer,
             System.setSecurityManager(new SecurityManager());
         }
 
-        Registry registry = LocateRegistry.createRegistry(port);
+        Registry registry = null;
+        try {
+            registry = LocateRegistry.createRegistry(port);
+        } catch (RemoteException e) {
+            registry = LocateRegistry.getRegistry(port);
+        }
         registry.rebind("Balancer", this);
     }
 
